@@ -1,0 +1,31 @@
+<?php
+
+namespace App\Http\Middleware;
+
+use App\Providers\AuthServiceProvider;
+use Closure;
+use Illuminate\Support\Facades\Auth;
+
+class Admin
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @return mixed
+     */
+    public function handle($request, Closure $next)
+    {
+        if(Auth::check())
+        {
+            if(Auth::user()->isAdmin())
+            {
+                return $next($request);
+            }
+        }
+
+        return redirect('/login')
+            ->with(['error' => "You do not have the permission to enter this site. Please login with correct user."]);
+    }
+}
